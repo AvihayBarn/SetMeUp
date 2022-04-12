@@ -11,7 +11,7 @@ public class SetMeUpGame
 		BIG(5),
 		SMALL(3);
 		private int m_value;
-		private TableSize(int i_value)
+		TableSize(int i_value)
 		{
 			m_value = i_value;
 		}
