@@ -4,11 +4,20 @@ public class AlgorithmsProvider
 {
  
 	public enum Algorithm{
-		BFS,
-		AStar,
-		IDAStar,
-		DFBnb,
-		DFID
+		BFS ("BFS"),
+		AStar ("A*"),
+		IDAStar ("IDA*"),
+		DFBnB ("DFBnB"),
+		DFID  ("DFID");
+		private String m_value;
+		private Algorithm(String i_value)
+		{
+			m_value = i_value;
+		}
+		public String GetValue()
+		{
+			return m_value;
+		}
 	}
 	
 	
@@ -30,8 +39,19 @@ public class AlgorithmsProvider
 		
 		return m_algorihtms_provider;
 	}
-	public void SetUpAndRun() {
-		
+	public void SetUpAndRun(Algorithm algorithm) {
+
+		String details;
+
+		switch (algorithm)
+		{
+			case BFS:     break;
+			case AStar:   break;
+			case DFID:    break;
+			case IDAStar: break;
+			case DFBnB:   break;
+
+		}
 	}
 	
 	private String BFS()
