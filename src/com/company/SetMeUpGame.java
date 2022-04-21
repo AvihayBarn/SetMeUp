@@ -6,42 +6,7 @@ import java.util.Arrays;
 public class SetMeUpGame
 {
 	
-	
-	
-	
-	public enum TableSize
-	{
-		BIG(5),
-		SMALL(3);
-		private int m_value;
-		TableSize(int i_value)
-		{
-			m_value = i_value;
-		}
-		public int GetValue()
-		{
-			return m_value;
-		}
-		
-	}
-	public enum MarbleColor
-	{
-		GREEN,
-		BLUE,
-		YELLOW,
-		NONE
-	}
-	
-	
-	
-	
-	
-	
-	private MarbleColor[][] m_board;
-	private AlgorithmsProvider m_algorithms_provider;
-	private AlgorithmsProvider.Algorithm m_algorithm;
 
-	private TableSize m_table_size;
 	private boolean m_with_opean;
 
 
@@ -55,7 +20,7 @@ public class SetMeUpGame
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line = reader.readLine();
 			System.out.println("line = "+line);
-			m_algorithm = AlgorithmsProvider.Algorithm.valueOf(line);
+			AlgorithmsProvider.Algorithm algorithm = AlgorithmsProvider.Algorithm.valueOf(line);
 
 			line = reader.readLine();
 			System.out.println("line = "+line);
@@ -67,27 +32,28 @@ public class SetMeUpGame
 			{
 				m_with_opean = true;
 			}
-			System.out.println(m_algorithm.GetValue());
+			System.out.println(algorithm.GetValue());
 			System.out.println(m_with_opean);
 
 			line = reader.readLine();
 			System.out.println("line = "+line);
 			String[][] Start_State;
 			String[][] Finite_State;
+			int table_size;
 			if(line.equals("small"))
 			{
-				m_table_size = TableSize.SMALL;
-				Start_State = new String[TableSize.SMALL.GetValue()][TableSize.SMALL.GetValue()];
-				Finite_State = new String[TableSize.SMALL.GetValue()][TableSize.SMALL.GetValue()];
+				table_size = 3;
+				Start_State = new String[SetMeUpState.TableSize.SMALL.GetValue()][SetMeUpState.TableSize.SMALL.GetValue()];
+				Finite_State = new String[SetMeUpState.TableSize.SMALL.GetValue()][SetMeUpState.TableSize.SMALL.GetValue()];
 			}
 			else
 			{
-				m_table_size = TableSize.BIG;
-				Start_State = new String[TableSize.BIG.GetValue()][TableSize.BIG.GetValue()];
-				Finite_State = new String[TableSize.BIG.GetValue()][TableSize.BIG.GetValue()];
+				table_size = 5;
+				Start_State = new String[SetMeUpState.TableSize.BIG.GetValue()][SetMeUpState.TableSize.BIG.GetValue()];
+				Finite_State = new String[SetMeUpState.TableSize.BIG.GetValue()][SetMeUpState.TableSize.BIG.GetValue()];
 			}
 
-			for(int i = 0; i < m_table_size.GetValue() ;i++)
+			for(int i = 0; i < table_size ;i++)
 			{
 				line = reader.readLine();
 				System.out.println("line = "+line);
@@ -97,7 +63,7 @@ public class SetMeUpGame
 			line = reader.readLine();
 			System.out.println("line = "+line);
 
-			for(int i = 0; i < m_table_size.GetValue() ;i++)
+			for(int i = 0; i < table_size ;i++)
 			{
 				line = reader.readLine();
 				System.out.println("line = "+line);
