@@ -8,7 +8,7 @@ public class SetMeUpGame
 	
 
 	private boolean m_with_opean;
-
+	private AlgorithmDetails m_detials;
 
 
 
@@ -71,39 +71,21 @@ public class SetMeUpGame
 				Finite_State[i] = row;
 			}
 
-			Print2DArray(Start_State);
-			Print2DArray(Finite_State);
+			SetMeUpState start = new SetMeUpState(Start_State);
+			SetMeUpState goal = new SetMeUpState(Finite_State);
 
+			AlgorithmsProvider algorithmsProvider = AlgorithmsProvider.GetInstance();
+			algorithmsProvider.Setup(algorithm);
 
+			m_detials = algorithmsProvider.Run(start,goal);
+			m_detials.saveOutput();
 
-
-
-
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
 	
-	@Override
-	public String toString()
-	{
-		return null;
-	}
 
-	public static void Print2DArray(Object[][] arr)
-	{
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		for (int i=0;i<arr.length;i++){
-			for (int j=0;j<arr[0].length;j++){
-				System.out.print(arr[i][j]);
-			}
-			System.out.println();
-		}
-	}
+
 }

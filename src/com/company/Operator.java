@@ -8,6 +8,7 @@ public class Operator
     private Point m_end_point;
     private SetMeUpState.MarbleColor m_color;
 
+
     public Operator(Point i_start_point , Point i_end_point , SetMeUpState.MarbleColor i_color)
     {
         m_start_point = i_start_point;
@@ -15,6 +16,27 @@ public class Operator
         m_color = i_color;
 
     }
+
+    public Point GetStartPoint()
+    {
+        return m_start_point;
+    }
+
+    public Point GetEndPoint()
+    {
+        return m_end_point;
+    }
+
+    public int GetCost()
+    {
+        return m_color.GetValue();
+    }
+
+    public SetMeUpState.MarbleColor GetMarbleColor()
+    {
+        return m_color;
+    }
+
 
     @Override
     public String toString()

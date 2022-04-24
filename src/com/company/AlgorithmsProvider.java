@@ -24,6 +24,7 @@ public class AlgorithmsProvider
 	
 	public static AlgorithmsProvider m_algorihtms_provider;
 	private Algorithm m_algorithm;
+	public SetMeUpState m_goal;
 	private int m_num_of_nodes;
 	
 	private AlgorithmsProvider()
@@ -31,7 +32,7 @@ public class AlgorithmsProvider
 		
 	}
 	
-	public AlgorithmsProvider GetInstance()
+	public static AlgorithmsProvider GetInstance()
 	{
 		
 		if(m_algorihtms_provider == null)
@@ -57,36 +58,43 @@ public class AlgorithmsProvider
 		}
 	}
 
-	public void Run()
-	{
+	public AlgorithmDetails Run(SetMeUpState start , SetMeUpState goal) throws Exception {
+		m_goal = goal;
 		switch (m_algorithm)
 		{
-			case BFS:     BFS();   break;
-			case AStar:   ASTAR();   break;
-			case DFID:    DFID();   break;
-			case IDAStar: IDAStar();  break;
-			case DFBnB:   DFBnB();   break;
+			case BFS:
+				return BFS(start);
+			case AStar:
+				return ASTAR(start);
+			case DFID:
+				return DFID(start);
+			case IDAStar:
+				return IDAStar(start);
+			case DFBnB:
+				return DFBnB(start);
+			default:
+				throw new Exception("The algorithm that you chose is invalid");
 
 		}
 	}
 
-	private static AlgorithmDetails BFS()
+	private static AlgorithmDetails BFS(SetMeUpState start)
 	{
 		return null;
 	}
-	private static AlgorithmDetails ASTAR()
+	private static AlgorithmDetails ASTAR(SetMeUpState start)
 	{
 		return null;
 	}
-	private static AlgorithmDetails IDAStar()
+	private static AlgorithmDetails IDAStar(SetMeUpState start)
 	{
 		return null;
 	}
-	private static AlgorithmDetails DFBnB()
+	private static AlgorithmDetails DFBnB(SetMeUpState start)
 	{
 		return null;
 	}
-	private static AlgorithmDetails DFID()
+	private static AlgorithmDetails DFID(SetMeUpState start)
 	{
 		return null;
 	}
