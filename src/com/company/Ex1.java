@@ -1,8 +1,10 @@
 package com.company;
 
 
-public class Ex1 {
-	public static void main(String[] args) {
+public class Ex1
+{
+	public static void main(String[] args)
+	{
 		SetMeUpGame game = new SetMeUpGame("input.txt");
 	}
 }

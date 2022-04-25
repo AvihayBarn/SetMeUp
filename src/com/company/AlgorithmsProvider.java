@@ -1,7 +1,14 @@
 package com.company;
 
+import java.util.Hashtable;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class AlgorithmsProvider
 {
+
+	//Enum of algorithm
  
 	public enum Algorithm
 	{
@@ -21,27 +28,38 @@ public class AlgorithmsProvider
 		}
 	}
 	
-	
-	public static AlgorithmsProvider m_algorihtms_provider;
+
+
+	//Fields
+
+	public static AlgorithmsProvider m_algorithms_provider;
 	private Algorithm m_algorithm;
-	public SetMeUpState m_goal;
+	public static SetMeUpState m_goal;
 	private int m_num_of_nodes;
-	
+
+
+
 	private AlgorithmsProvider()
 	{
 		
 	}
-	
+
+
+
 	public static AlgorithmsProvider GetInstance()
 	{
 		
-		if(m_algorihtms_provider == null)
+		if(m_algorithms_provider == null)
 		{
-			m_algorihtms_provider = new AlgorithmsProvider();
+			m_algorithms_provider = new AlgorithmsProvider();
 		}
 		
-		return m_algorihtms_provider;
+		return m_algorithms_provider;
 	}
+
+
+	//Set up the algorithm that will find the path
+
 	public void Setup(Algorithm algorithm)
 	{
 
@@ -58,7 +76,14 @@ public class AlgorithmsProvider
 		}
 	}
 
+
+
 	public AlgorithmDetails Run(SetMeUpState start , SetMeUpState goal) throws Exception {
+		System.out.println(start.toString());
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println(goal.toString());
 		m_goal = goal;
 		switch (m_algorithm)
 		{
@@ -78,25 +103,89 @@ public class AlgorithmsProvider
 		}
 	}
 
+
+
+
 	private static AlgorithmDetails BFS(SetMeUpState start)
 	{
-		return null;
+
+		long start_time = System.currentTimeMillis() , end_time;
+		int nodes_num= 0;
+		Hashtable<String,SetMeUpState> closed_list = new Hashtable<String,SetMeUpState>();
+		Queue<SetMeUpState> open_list = new LinkedList<SetMeUpState>();
+
+		open_list.add(start);
+		closed_list.put(start.toString(),start);
+
+		while(!open_list.isEmpty())
+		{
+
+			SetMeUpState current_state = open_list.remove();
+
+			List<Operator> next_states = current_state.GetOprators();
+			for(Operator operator : next_states)
+			{
+				SetMeUpState next_state = current_state.ActivateOperator(operator);
+
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				System.out.println();
+				System.out.println(next_state.toString());
+				System.out.println(operator.toString());
+				System.out.println();
+				System.out.println();
+				System.out.println();
+
+				nodes_num++;
+
+				if(!closed_list.containsKey(next_state.toString()))
+				{
+					if(next_state.equals(m_goal))
+					{
+						end_time = System.currentTimeMillis();
+						return new AlgorithmDetails((double) (end_time - start_time)/1000 , next_state.GetCost(),nodes_num,next_state.GetPath());
+					}
+					open_list.add(next_state);
+					closed_list.put(next_state.toString(),next_state);
+
+				}
+			}
+
+		}
+
+		end_time = System.currentTimeMillis();
+		return AlgorithmDetails.NoPathResult((double) (end_time - start_time)/1000  , nodes_num);
 	}
+
+
+
 	private static AlgorithmDetails ASTAR(SetMeUpState start)
 	{
 		return null;
 	}
+
+
+
 	private static AlgorithmDetails IDAStar(SetMeUpState start)
 	{
 		return null;
 	}
+
+
+
 	private static AlgorithmDetails DFBnB(SetMeUpState start)
 	{
 		return null;
 	}
+
+
+
 	private static AlgorithmDetails DFID(SetMeUpState start)
 	{
 		return null;
 	}
+
+
 	
 }

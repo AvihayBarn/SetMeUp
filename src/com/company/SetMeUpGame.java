@@ -7,6 +7,7 @@ public class SetMeUpGame
 {
 	
 
+
 	private boolean m_with_opean;
 	private AlgorithmDetails m_detials;
 
