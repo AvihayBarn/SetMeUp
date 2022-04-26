@@ -54,7 +54,7 @@ public class SetMeUpState
 	private int m_cost;
 	private String m_path;
 	private Operator m_last_operator;
-
+	
 
 
 	public SetMeUpState(String[][] i_board)
@@ -141,10 +141,14 @@ public class SetMeUpState
 		return new_state;
 	}
 
+
+
 	public int GetCost()
 	{
 		return  m_cost;
 	}
+
+
 
 	public String GetPath()
 	{
@@ -234,7 +238,7 @@ public class SetMeUpState
 			{
 				String tile = " "+m_board[i][j].name();
 
-				if(i == 1 && j == 1) tile = tile.substring(1 , tile.length());
+				if(j == 1) tile = tile.substring(1 , tile.length());
 				if(j == m_board.length -1) tile += "\n";
 
 				arr.append(tile);

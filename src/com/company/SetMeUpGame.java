@@ -8,7 +8,7 @@ public class SetMeUpGame
 	
 
 
-	private boolean m_with_opean;
+
 	private AlgorithmDetails m_detials;
 
 
@@ -20,24 +20,21 @@ public class SetMeUpGame
 			File file = new File(input_file);
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line = reader.readLine();
-			System.out.println("line = "+line);
-			AlgorithmsProvider.Algorithm algorithm = AlgorithmsProvider.Algorithm.valueOf(line);
 
+			AlgorithmsProvider.Algorithm algorithm = AlgorithmsProvider.Algorithm.valueOf(line);
+			boolean with_open;
 			line = reader.readLine();
-			System.out.println("line = "+line);
+
 			if(line.equals("no open"))
 			{
-				m_with_opean = false;
+				with_open = false;
 			}
 			else
 			{
-				m_with_opean = true;
+				with_open = true;
 			}
-			System.out.println(algorithm.GetValue());
-			System.out.println(m_with_opean);
 
 			line = reader.readLine();
-			System.out.println("line = "+line);
 			String[][] Start_State;
 			String[][] Finite_State;
 			int table_size;
@@ -57,17 +54,15 @@ public class SetMeUpGame
 			for(int i = 0; i < table_size ;i++)
 			{
 				line = reader.readLine();
-				System.out.println("line = "+line);
 				String[] row = line.split(",");
 				Start_State[i] = row;
 			}
 			line = reader.readLine();
-			System.out.println("line = "+line);
+
 
 			for(int i = 0; i < table_size ;i++)
 			{
 				line = reader.readLine();
-				System.out.println("line = "+line);
 				String[] row = line.split(",");
 				Finite_State[i] = row;
 			}
@@ -76,7 +71,7 @@ public class SetMeUpGame
 			SetMeUpState goal = new SetMeUpState(Finite_State);
 
 			AlgorithmsProvider algorithmsProvider = AlgorithmsProvider.GetInstance();
-			algorithmsProvider.Setup(algorithm);
+			algorithmsProvider.Setup(algorithm,with_open);
 
 			m_detials = algorithmsProvider.Run(start,goal);
 			m_detials.saveOutput();
