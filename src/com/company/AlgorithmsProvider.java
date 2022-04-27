@@ -36,14 +36,14 @@ public class AlgorithmsProvider
 	private static boolean m_with_open;
 	private static SetMeUpState m_goal;
 	private Algorithm m_algorithm;
-	private int m_num_of_nodes;
+	private static int m_nodes_num;
 
 
 
 
 	private AlgorithmsProvider()
 	{
-		m_num_of_nodes = 0;
+		m_nodes_num = 0;
 	}
 
 
@@ -65,6 +65,7 @@ public class AlgorithmsProvider
 	public void Setup(Algorithm algorithm , boolean i_with_open)
 	{
 		m_with_open = i_with_open;
+		m_nodes_num = 0;
 		switch (algorithm)
 		{
 			case BFS:     m_algorithm = Algorithm.BFS;   break;
@@ -106,7 +107,7 @@ public class AlgorithmsProvider
 	{
 
 		long start_time = System.currentTimeMillis() , end_time;
-		int nodes_num= 0;
+
 		Hashtable<String,SetMeUpState> closed_list = new Hashtable<String,SetMeUpState>();
 		Queue<SetMeUpState> open_list = new LinkedList<SetMeUpState>();
 
@@ -129,14 +130,14 @@ public class AlgorithmsProvider
 
 				}
 
-				nodes_num++;
+				m_nodes_num++;
 
 				if(!closed_list.containsKey(next_state.toString()))
 				{
 					if(next_state.equals(m_goal))
 					{
 						end_time = System.currentTimeMillis();
-						return new AlgorithmDetails((double) (end_time - start_time)/1000 , next_state.GetCost(),nodes_num,next_state.GetPath());
+						return new AlgorithmDetails((double) (end_time - start_time)/1000 , next_state.GetCost(),m_nodes_num,next_state.GetPath());
 					}
 					open_list.add(next_state);
 					closed_list.put(next_state.toString(),next_state);
@@ -147,14 +148,85 @@ public class AlgorithmsProvider
 		}
 
 		end_time = System.currentTimeMillis();
-		return AlgorithmDetails.NoPathResult((double) (end_time - start_time)/1000  , nodes_num);
+		return AlgorithmDetails.NoPathResult((double) (end_time - start_time)/1000  , m_nodes_num , false);
 	}
 
 
 
 	private static AlgorithmDetails DFID(SetMeUpState start)
 	{
-		return null;
+		long start_time = System.currentTimeMillis() , end_time;
+		int nodes_num = 0;
+
+
+		for(int i = 1; i < Integer.MAX_VALUE ; i++)
+		{
+			Hashtable<String,SetMeUpState> open_list = new Hashtable<String,SetMeUpState>();
+			AlgorithmDetails details = LimitedDFS(start,i,open_list);
+
+
+			if(!details.GetIsCutOff())
+			{
+				end_time = System.currentTimeMillis();
+				details.SetNodesNum(m_nodes_num);
+				details.SetRuntime((double) (end_time - start_time)/1000);
+
+				return details;
+			}
+		}
+		end_time = System.currentTimeMillis();
+		return AlgorithmDetails.NoPathResult((double) (end_time - start_time)/1000 ,m_nodes_num , false);
+
+	}
+
+	private static AlgorithmDetails LimitedDFS(SetMeUpState state , int depth , Hashtable<String,SetMeUpState> open_list)
+	{
+		if(state.equals(m_goal))
+		{
+			return new AlgorithmDetails(0,state.GetCost(),m_nodes_num,state.GetPath());
+		}
+
+		if(depth == 0)
+		{
+			AlgorithmDetails cut_off_state = AlgorithmDetails.NoPathResult(0 ,m_nodes_num , true);
+			return cut_off_state;
+		}
+
+
+		open_list.put(state.toString(),state);
+		boolean is_cut_off = false;
+
+		List<Operator> operators = state.GetOprators();
+
+		for(Operator operator : operators)
+		{
+			SetMeUpState new_state = state.ActivateOperator(operator);
+			m_nodes_num++;
+			if(!open_list.containsKey(new_state.toString()))
+			{
+				AlgorithmDetails details = LimitedDFS(new_state ,depth-1 , open_list);
+
+				if(details.GetIsCutOff())
+				{
+					is_cut_off = true;
+				}
+				else if(details.HasPath())
+				{
+					return details;
+				}
+
+
+			}
+		}
+
+		open_list.remove(state);
+
+		if(is_cut_off)
+		{
+			return AlgorithmDetails.NoPathResult(0,m_nodes_num,true);
+		}
+
+		return AlgorithmDetails.NoPathResult(0,m_nodes_num,false);
 	}
 
 

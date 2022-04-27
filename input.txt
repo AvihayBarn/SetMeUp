@@ -1,14 +1,10 @@
-BFS
-with open
-big
-R,R,_,Y,B
-B,B,_,B,Y
-G,G,_,G,G
-_,R,R,G,_
-_,_,_,_,_
+DFID
+no open
+small
+R,R,_
+B,B,_
+G,G,_
 Goal state:
-R,_,R,Y,B
-B,B,B,_,Y
-G,_,G,G,G
-_,_,_,_,_
-_,R,R,G,_
+R,R,B
+B,G,_
+G,_,_

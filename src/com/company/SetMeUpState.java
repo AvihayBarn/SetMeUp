@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class SetMeUpState
 {
@@ -62,20 +63,18 @@ public class SetMeUpState
 		InitializeBoard(i_board);
 		m_parnet = null;
 		m_cost = 0;
-		m_path = "";
 		m_last_operator = null;
 	}
 
 
 
-	public SetMeUpState(MarbleColor[][] i_board , int i_cost , String i_path , SetMeUpState i_parent , Operator i_last_operator)
+	public SetMeUpState(MarbleColor[][] i_board , int i_cost , SetMeUpState i_parent , Operator i_last_operator)
 	{
 		m_parnet = i_parent;
 		m_last_operator = i_last_operator;
 		m_board = i_board;
 		//System.arraycopy(i_board,0,m_board,0,i_board.length);
 		m_cost = i_cost;
-		m_path = i_path;
 	}
 
 
@@ -131,13 +130,8 @@ public class SetMeUpState
 
 		new_board[start.x][start.y] = MarbleColor.N;
 		new_board[end.x][end.y] = operator.GetMarbleColor();
-		String current_move = operator.toString();
-
-		if(!m_path.equals(""))
-		{
-			current_move = "--"+current_move;
-		}
-		SetMeUpState new_state = new SetMeUpState(new_board ,m_cost + operator.GetCost() ,m_path + current_move,this,operator);
+		
+		SetMeUpState new_state = new SetMeUpState(new_board ,m_cost + operator.GetCost() ,this,operator);
 		return new_state;
 	}
 
@@ -152,7 +146,20 @@ public class SetMeUpState
 
 	public String GetPath()
 	{
-		return m_path;
+		String path = "";
+		path = m_last_operator.toString();
+		SetMeUpState parent = m_parnet;
+		while(parent != null)
+		{
+			if(parent.m_last_operator != null)
+			{
+				path = parent.m_last_operator.toString()+"--"+path;
+			}
+
+			parent = parent.m_parnet;
+		}
+
+		return path;
 	}
 
 
