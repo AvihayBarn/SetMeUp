@@ -20,8 +20,8 @@ public class SetMeUpGame
 			File file = new File(input_file);
 			BufferedReader reader = new BufferedReader(new FileReader(file));
 			String line = reader.readLine();
-
-			AlgorithmsProvider.Algorithm algorithm = AlgorithmsProvider.Algorithm.valueOf(line);
+			System.out.println(line);
+			AlgorithmsProvider.Algorithm algorithm = AlgorithmsProvider.GetAlgorithm(line);
 			boolean with_open;
 			line = reader.readLine();
 
