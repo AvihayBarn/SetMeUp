@@ -126,7 +126,11 @@ public class AlgorithmsProvider
 
 		while(!open_list.isEmpty())
 		{
+			if(m_with_open)
+			{
+				display(open_list);
 
+			}
 			SetMeUpState current_state = open_list.remove();
 
 			List<Operator> next_SetMeUpStates = current_state.GetOprators();
@@ -134,11 +138,7 @@ public class AlgorithmsProvider
 			{
 				SetMeUpState next_SetMeUpState = current_state.ActivateOperator(operator);
 
-				if(m_with_open)
-				{
-					display(next_SetMeUpState,operator);
 
-				}
 
 				m_nodes_num++;
 
@@ -228,7 +228,11 @@ public class AlgorithmsProvider
 
 			}
 		}
+		if(m_with_open)
+		{
+			display(open_list.values());
 
+		}
 		open_list.remove(SetMeUpState);
 
 		if(is_cut_off)
@@ -257,6 +261,10 @@ public class AlgorithmsProvider
 
 		while(!priority_queue.isEmpty()) {
 
+			if(m_with_open)
+			{
+				display(priority_queue);
+			}
 			SetMeUpState current_state = priority_queue.remove();
 			
 			open_list.remove(current_state.toString());
@@ -274,7 +282,7 @@ public class AlgorithmsProvider
 			for(Operator operator : operators)
 			{
 				SetMeUpState new_state = current_state.ActivateOperator(operator);
-				display(new_state,operator);
+
 				m_nodes_num++;
 
 				String new_state_str = new_state.toString();
@@ -324,6 +332,10 @@ public class AlgorithmsProvider
 
 			while(!stack.isEmpty()) {
 
+				if(m_with_open)
+				{
+					display(stack);
+				}
 				SetMeUpState current_state = stack.pop();
 
 				if(current_state.IsOutOfOpenList()) open_list.remove(current_state.toString());
@@ -338,7 +350,7 @@ public class AlgorithmsProvider
 					for(Operator operator : operators) {
 
 						SetMeUpState new_state = current_state.ActivateOperator(operator);
-						display(new_state,operator);
+
 						m_nodes_num++;
 
 						String new_state_str = new_state.toString();
@@ -381,8 +393,8 @@ public class AlgorithmsProvider
 
 	private static AlgorithmDetails DFBnB(SetMeUpState start)
 	{
-		return null;
-	/*	long startTime = System.currentTimeMillis() , end_time;
+
+		long startTime = System.currentTimeMillis() , end_time;
 
 		Stack<SetMeUpState> stack = new Stack<SetMeUpState>();
 		Hashtable<String, SetMeUpState> open_list = new Hashtable<String, SetMeUpState>();
@@ -390,74 +402,98 @@ public class AlgorithmsProvider
 		stack.add(start);
 		open_list.put(start.toString(),start);
 
-		List<SetMeUpState> resultPath = null;
 		SetMeUpState goal = null;
-		int threshold = initialState.maxThreshold();
-		List<Operator> operators
+		int threshold = start.GetMaxThreshold();
 
-		while(!stack.isEmpty()) {
 
+		while(!stack.isEmpty())
+		{
+			if(m_with_open)
+			{
+				display(stack);
+			}
 			SetMeUpState curernt_state = stack.pop();
 
-			if(curernt_state.IsOutOfopen_list())
+			if(curernt_state.IsOutOfOpenList())
 			{
 				open_list.remove(curernt_state.toString());
 			}
-			else {
-				 curernt_state.SetIsOutOfopen_list(true);
+			else
+			{
+				 curernt_state.SetIsOutOfOpenList(true);
 				stack.add(curernt_state);
-				LinkedList<SetMeUpState> operators = new LinkedList<SetMeUpState>();
-
-				for(int i=1; i<=numOperators; i++) {
-					SetMeUpState new_state = curre.getOperator(i);
-					if(operator != null) operators.add(operator);
+				LinkedList<SetMeUpState> states = new LinkedList<SetMeUpState>();
+				List<Operator> operators = curernt_state.GetOprators();
+				for(Operator operator : operators) {
+					SetMeUpState new_state = curernt_state.ActivateOperator(operator);
+					m_nodes_num++;
+					states.add(new_state);
 				}
-				operators.sort(new StateComparator());
-				// Cuts all states from the list whose evaluation is greater than the threshold
+
+				states.sort(GetComprator());
+
 				int i = 0;
-				while (i < operators.size()) {
-					//for(int i=0; i<operators.size(); i++) {
-					State operator = operators.get(i);
-					String new_state_str = operator.toString();
-					if(f(operator) >= threshold) {
-						while(i < operators.size())
-							operators.remove(i);
+				while (i < states.size())
+				{
+
+					SetMeUpState state = states.get(i);
+					String new_state_str = state.toString();
+					if(Evaluation(state) >= threshold)
+					{
+						while(i < states.size())
+						{
+							states.remove(i);
+						}
+
 					}
-					else if(open_list.containsKey(new_state_str)) {
-						State existOp = open_list.get(new_state_str);
-						if(existOp.isOut())
-							operators.remove(i);
-						else {
-							// If its not marked as "out" and with greater evaluation, remove from stack and add later
-							if(f(existOp) <= f(operator))
-								operators.remove(i);
-							else {
-								stack.remove(existOp);
+					else if(open_list.containsKey(new_state_str))
+					{
+						SetMeUpState exist_state = open_list.get(new_state_str);
+						if(exist_state.IsOutOfOpenList())
+							states.remove(i);
+						else
+						{
+
+							if(Evaluation(exist_state) <= Evaluation(state))
+								states.remove(i);
+							else
+							{
+								stack.remove(exist_state);
 								open_list.remove(new_state_str);
 							}
 						}
 					}
-					// If we reached here, f(operator)<threshold
-					else if(operator.IsGoal()) {
-						threshold = f(operator);
-						resultPath = findPath(operator);
-						goal = operator;
-						// Cuts all states from the list whose evaluation is greater than the goal
-						while(i < operators.size())
-							operators.remove(i);
+
+					else if(state.equals(m_goal))
+					{
+
+						threshold = Evaluation(state);
+						goal = state;
+
+						while(i < states.size())
+						{
+							states.remove(i);
+						}
+
 					}
 					else i++;
 				}
-				// Add the entire remaining list to the stack in reverse order
-				for(int j=operators.size()-1; j>=0; j--) {
-					stack.add(operators.get(j));
-					open_list.put(operators.get(j).toString(), operators.get(j));
+
+				for(int j = states.size() - 1 ;  j >= 0 ; j--)
+				{
+					stack.add(states.get(j));
+					open_list.put(states.get(j).toString(), states.get(j));
 				}
 			}
 		}
-		// Stop time and return all best solution found
-		double time = (double) (System.currentTimeMillis() - startTime) / 1000;
-		return new SearchInfo(resultPath, goal.getCost(), time);*/
+
+		end_time = System.currentTimeMillis();
+
+		if (goal != null)
+		{
+			return new AlgorithmDetails((double) (end_time - startTime)/1000 , goal.GetCost() ,m_nodes_num , goal.GetPath());
+		}
+		return AlgorithmDetails.NoPathResult((double) (end_time - startTime)/1000 ,m_nodes_num , false);
 	}
 
 
@@ -466,7 +502,12 @@ public class AlgorithmsProvider
 
 	private static PriorityQueue<SetMeUpState> GetNewStatesQueue()
 	{
-		return new PriorityQueue<SetMeUpState>(new Comparator<SetMeUpState>() {
+		return new PriorityQueue<SetMeUpState>(GetComprator());
+	}
+
+	private static Comparator<SetMeUpState> GetComprator()
+	{
+		return new Comparator<SetMeUpState>() {
 			@Override
 			public int compare(SetMeUpState state1, SetMeUpState state2) {
 				int dif = (Evaluation(state1)  -  Evaluation(state2));
@@ -478,7 +519,7 @@ public class AlgorithmsProvider
 
 				return dif;
 			}
-		});
+		};
 	}
 	private static int Evaluation(SetMeUpState state)
 	{
@@ -486,17 +527,24 @@ public class AlgorithmsProvider
 		int current_cost = state.GetCost();
 		return (current_cost+heurisitc);
 	}
-	private static void display(SetMeUpState state , Operator operator)
+	private static void display(Collection<SetMeUpState> states)
 	{
-		System.out.println();
-		System.out.println();
-		System.out.println();
-		System.out.println(state.toString());
-		System.out.println("id = "+state.GetId());
-		System.out.println("parent id = "+state.GetParentId());
-		System.out.println(operator.toString());
-		System.out.println();
-		System.out.println();
+		for (SetMeUpState state : states)
+		{
+			System.out.println();
+			System.out.println();
+			
+			System.out.println(state.toString());
+			System.out.println("id = "+state.GetId());
+			System.out.println("parent id = "+state.GetParentId());
+			if(state.GetLastOperator() != null)
+			{
+				System.out.println(state.GetLastOperator().toString());
+			}
+			System.out.println();
+			System.out.println();
+		}
+
 		System.out.println("__________________________________________________");
 	}
 

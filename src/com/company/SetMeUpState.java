@@ -289,6 +289,7 @@ public class SetMeUpState
 		return false;
 	}
 
+
 	private MarbleColor[][] BoardDeepCopy()
 	{
 		MarbleColor[][] copy = new MarbleColor[m_board.length][m_board.length];
@@ -312,6 +313,32 @@ public class SetMeUpState
 	public void SetIsOutOfOpenList(boolean is_out_of_open_list)
 	{
 		m_is_out_of_open_list = is_out_of_open_list;
+	}
+
+	public int GetMaxThreshold()
+	{
+		int size = m_board.length;
+		int possibilities = factorial(size*size);
+		return Math.min(possibilities , Integer.MAX_VALUE);
+	}
+
+	public Operator GetLastOperator()
+	{
+		return m_last_operator;
+	}
+
+	private int factorial(int num) {
+		//if num = 13 its above MAX_VALUE
+		if(num > 12)
+		{
+			return Integer.MAX_VALUE;
+		}
+		int factorial = 1;
+		for (int i = 2; i <= num; i++)
+		{
+			factorial = factorial * i;
+		}
+		return factorial;
 	}
 
 
@@ -427,8 +454,13 @@ public class SetMeUpState
 	{
 		return m_id;
 	}
+
 	public int GetParentId()
 	{
+		if(m_parnet == null)
+		{
+			return 0;
+		}
 		return m_parnet.m_id;
 	}
 
